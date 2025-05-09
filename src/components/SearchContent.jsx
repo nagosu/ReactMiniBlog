@@ -26,6 +26,7 @@ function SearchContent() {
   // 검색어 변경 시 포스트 목록 조회
   useEffect(() => {
     if (query) {
+      console.log(query);
       fetchPostsByTitle(query)
         .then((res) => setPosts(res))
         .catch((err) => console.log(err));

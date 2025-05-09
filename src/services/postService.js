@@ -33,15 +33,17 @@ export const fetchPostByPostId = async (postId) => {
 };
 
 // 게시글 검색 (제목)
+// 모든 게시글을 가져와서 클라이언트 측에서 필터링
 export const fetchPostsByTitle = async (keyword) => {
-  const q = query(
-    collection(db, 'posts'),
-    where('title', '>=', keyword),
-    where('title', '<=', keyword + '\uf8ff')
-  );
+  const q = query(collection(db, 'posts'));
   const snap = await getDocs(q);
 
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const posts = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  // 부분 일치 필터링 (대소문자 구분 없음)
+  return posts.filter((post) =>
+    post.title.toLowerCase().includes(keyword.toLowerCase())
+  );
 };
 
 // 게시글 작성
